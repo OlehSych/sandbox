@@ -7,9 +7,9 @@ describe('Validate deepCopy function', () => {
     animal = {
       name: 'animal',
       age: 10,
-      childs: ['child 1', 'child 2'],
+      children: [{ name: 'child 1' }, 'child 2'],
       needs: {
-        eat: 'meat',
+        eat: ['meat', 'fish'],
         drink: 'water',
       },
       getAge: () => this.age,
@@ -26,13 +26,26 @@ describe('Validate deepCopy function', () => {
     cat.needs.drink = 'milk';
     expect(cat.needs).not.toBe(animal.needs);
   });
-  // TODO: check deep nesting
+
   it('Should create new child arrays', () => {
     const cat = deepCopy(animal);
-    cat.childs.push('child 3');
-    expect(cat.childs).not.toBe(animal.childs);
+    cat.children.push('child 3');
+    expect(cat.children).not.toBe(animal.children);
+  });
+
+  it('Should create new child arrays inside child objects', () => {
+    const cat = deepCopy(animal);
+    cat.needs.eat.push('mouse');
+    expect(cat.needs.eat).not.toBe(animal.needs.eat);
+  });
+
+  it('Should create new child objects inside child arrays', () => {
+    const cat = deepCopy(animal);
+    expect(cat.children[0]).not.toBe(animal.children[0]);
   });
 
   it('Should create new child functions', () => {
+    const cat = deepCopy(animal);
+    expect(cat.getAge).not.toBe(animal.getAge);
   });
 });

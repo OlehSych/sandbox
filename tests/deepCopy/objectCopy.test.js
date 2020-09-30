@@ -1,6 +1,6 @@
-import deepCopy from '../src/deepCopy';
+import deepCopy from '../../src/deepCopy';
 
-describe('Validate deepCopy function', () => {
+describe('Validate deepCopy fn objects copying', () => {
   let animal;
 
   beforeEach(() => {
@@ -27,25 +27,8 @@ describe('Validate deepCopy function', () => {
     expect(cat.needs).not.toBe(animal.needs);
   });
 
-  it('Should create new child arrays', () => {
-    const cat = deepCopy(animal);
-    cat.children.push('child 3');
-    expect(cat.children).not.toBe(animal.children);
-  });
-
-  it('Should create new child arrays inside child objects', () => {
-    const cat = deepCopy(animal);
-    cat.needs.eat.push('mouse');
-    expect(cat.needs.eat).not.toBe(animal.needs.eat);
-  });
-
   it('Should create new child objects inside child arrays', () => {
     const cat = deepCopy(animal);
     expect(cat.children[0]).not.toBe(animal.children[0]);
-  });
-
-  it('Should create new child functions', () => {
-    const cat = deepCopy(animal);
-    expect(cat.getAge).not.toBe(animal.getAge);
   });
 });

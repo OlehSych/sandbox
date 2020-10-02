@@ -1,4 +1,4 @@
-import { isObject, copyFunction } from './utils';
+import { isObject } from './utils';
 
 export default function deepCopy(obj) {
   return Object.keys(obj).reduce((newObj, key) => {
@@ -8,8 +8,6 @@ export default function deepCopy(obj) {
       newVal = deepCopy(obj[key]);
     } else if (Array.isArray(obj[key])) {
       newVal = obj[key].map(item => (typeof item === 'object' ? deepCopy(item) : item));
-    } else if (typeof obj[key] === 'function') {
-      newVal = copyFunction(obj[key]);
     } else {
       newVal = obj[key];
     }

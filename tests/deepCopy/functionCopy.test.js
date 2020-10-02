@@ -16,10 +16,9 @@ describe('Validate deepCopy child functions copying', () => {
     };
   });
 
-  it('Should create new child functions', () => {
+  it('Should copy functions', () => {
     const cat = deepCopy(animal);
-    expect(cat.getAge).not.toBe(animal.getAge);
-
-    // TODO implement functionality
+    delete animal.getAge;
+    expect(cat.getAge()).toBe(animal.age);
   });
 });

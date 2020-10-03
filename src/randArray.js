@@ -35,7 +35,7 @@ export default function randArray(length, min = 0, max = 1, scale = 0) {
   const invalidArg = checks.find(({ cond, err }) => !cond && err);
 
   if (invalidArg) {
-    return new Error(`Wrong argument exception: ${invalidArg.err}`);
+    return new Error(`Invalid argument exception: ${invalidArg.err}`);
   }
 
   const arr = new Array(length);

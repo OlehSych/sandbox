@@ -5,13 +5,9 @@ describe('Validate deepCopy child functions copying', () => {
 
   beforeEach(() => {
     animal = {
-      name: 'animal',
       age: 10,
       getAge() {
         return this.age;
-      },
-      getName() {
-        return this.name;
       },
     };
   });
@@ -19,6 +15,7 @@ describe('Validate deepCopy child functions copying', () => {
   it('Should copy functions', () => {
     const cat = deepCopy(animal);
     delete animal.getAge;
-    expect(cat.getAge()).toBe(animal.age);
+    cat.age = 3;
+    expect(cat.getAge()).toBe(cat.age);
   });
 });

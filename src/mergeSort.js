@@ -1,5 +1,5 @@
 export default function mergeSort(arr, compare = (v1, v2) => v1 < v2) {
-  if (arr.length === 1) {
+  if (arr.length < 2) {
     return arr;
   }
 

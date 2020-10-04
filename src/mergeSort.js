@@ -1,30 +1,16 @@
-import randArray from './randArray';
-
-const randArr = randArray(10, 0, 100);
-
-function compareAsc(v1, v2) {
-  return v1 < v2;
-}
-
-export default function mergeSort(arr, compare) {
+export default function mergeSort(arr, compare = (v1, v2) => v1 < v2) {
   if (arr.length === 1) {
     return arr;
   }
 
   const splitInd = Math.floor(arr.length / 2);
-  const part1 = mergeSort(arr.slice(0, splitInd));
-  const part2 = mergeSort(arr.slice(splitInd));
+  const part1 = mergeSort(arr.slice(0, splitInd), compare);
+  const part2 = mergeSort(arr.slice(splitInd), compare);
   const newArr = [];
 
-  for (let i = 0; i < part1.length; i++) {
-    for (let j = 0; j < part2.length; j++) {
-      if (compare(part1[i], part2[j])) {
-        newArr.push(part1[i]);
-      }
-    }
-  }
+  do {
+    newArr.push(compare(part1[0], part2[0]) ? part1.shift() : part2.shift());
+  } while (part1.length && part2.length);
 
-  return newArr;
+  return [...newArr, ...part1, ...part2];
 }
-
-console.log(mergeSort(randArr, compareAsc));

@@ -12,5 +12,8 @@ export default function mergeSort(arr, compare = (v1, v2) => v1 < v2) {
     newArr.push(compare(part1[0], part2[0]) ? part1.shift() : part2.shift());
   } while (part1.length && part2.length);
 
-  return [...newArr, ...part1, ...part2];
+  newArr.push(...part1);
+  newArr.push(...part2);
+
+  return newArr;
 }

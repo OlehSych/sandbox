@@ -1,5 +1,5 @@
 function isSafeNumber(value) {
-  return Math.sqrt(Math.abs(value)) <= Number.MAX_VALUE;
+  return Math.abs(value) <= Math.sqrt(Number.MAX_VALUE);
 }
 
 function round(number, scale) {
@@ -7,16 +7,14 @@ function round(number, scale) {
   return Math.floor(number * divider) / divider;
 }
 
-// TODO: write tests
 export default function randArray(length, min = 0, max = 1, scale = 0) {
   const args = {
     length, min, max, scale,
   };
   const checks = [
     {
-      cond: Object.keys(args).every(key => isSafeNumber(args[key])),
       get err() {
-        return this.cond;
+        return Object.keys(args).find(key => !isSafeNumber(args[key]));
       },
     },
     {
@@ -35,7 +33,7 @@ export default function randArray(length, min = 0, max = 1, scale = 0) {
   const invalidArg = checks.find(({ cond, err }) => !cond && err);
 
   if (invalidArg) {
-    return new Error(`Invalid argument exception: ${invalidArg.err}`);
+    throw new Error(`Invalid argument exception: ${invalidArg.err}`);
   }
 
   const arr = new Array(length);

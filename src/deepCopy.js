@@ -1,4 +1,4 @@
-import { isObject } from './utils';
+import isObject from './isObject';
 
 export default function deepCopy(obj) {
   return Object.keys(obj).reduce((newObj, key) => {

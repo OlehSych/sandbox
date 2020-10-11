@@ -1,23 +1,25 @@
 export default class Promis {
-  constructor(fn) {
-    this.statuses = {
+  static constructor() {
+    this.states = {
       pending: 'pending',
       fulfilled: 'fulfilled',
       rejected: 'rejected',
     };
+  }
+
+  constructor(fn) {
     this.resolveFns = [];
     this.rejectFns = [];
     this.finallyFns = [];
 
     try {
-      this.currentStatus = this.statuses.pending;
-      const result = fn(this.resolve, this.reject);
+      this.state = Promis.states.pending;
+      fn(Promis.resolve, Promis.reject);
     } catch (e) {
 
     } finally {
 
     }
-    return result;
   }
 
   then() {
@@ -32,13 +34,30 @@ export default class Promis {
 
   }
 
-  resolve(data) {
-    this.currentStatus = this.statuses.resolved;
-    return data;
+  static all(promisArr) {
+
   }
 
-  reject(err) {
-    this.currentStatus = this.statuses.rejected;
+  static allSettled(promisArr) {
+
+  }
+
+  static any(promisArr) {
+
+  }
+
+  static race(promisArr) {
+
+  }
+
+  static resolve(data) {
+    this.state = Promis.states.resolved;
+    this.result = data;
+  }
+
+  static reject(err) {
+    this.state = Promis.states.rejected;
+    this.result = err;
     throw new Error(err);
   }
 }

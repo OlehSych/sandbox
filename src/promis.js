@@ -1,37 +1,45 @@
 export default class Promis {
-  static constructor() {
-    this.states = {
-      pending: 'pending',
-      fulfilled: 'fulfilled',
-      rejected: 'rejected',
-    };
-  }
-
   constructor(fn) {
-    this.resolveFns = [];
-    this.rejectFns = [];
-    this.finallyFns = [];
+    Object.defineProperties(this, {
+      resolveFns: {
+        enumerable: false,
+        value: [],
+      },
+      rejectFns: {
+        enumerable: false,
+        value: [],
+      },
+      finallyFns: {
+        enumerable: false,
+        value: [],
+      },
+    });
+    this.state = Promis.states.pending;
+    this.result = undefined;
 
     try {
-      this.state = Promis.states.pending;
-      fn(Promis.resolve, Promis.reject);
-    } catch (e) {
-
+      fn((data) => {
+        this.state = Promis.states.fulfilled;
+        this.result = data;
+      });
+    } catch (err) {
+      this.state = Promis.states.rejected;
+      this.result = err;
+      throw new Error(err);
     } finally {
-
     }
   }
 
-  then() {
-
+  then(fn) {
+    this.resolveFns.push(fn);
   }
 
-  catch() {
-
+  catch(fn) {
+    this.rejectFns.push(fn);
   }
 
-  finally() {
-
+  finally(fn) {
+    this.finallyFns.push(fn);
   }
 
   static all(promisArr) {
@@ -51,7 +59,7 @@ export default class Promis {
   }
 
   static resolve(data) {
-    this.state = Promis.states.resolved;
+    this.state = Promis.states.fulfilled;
     this.result = data;
   }
 
@@ -60,7 +68,12 @@ export default class Promis {
     this.result = err;
     throw new Error(err);
   }
-}
 
-// check process next tick is microtask or not
-// check child process creates in the same thread or not
+  static get states() {
+    return {
+      pending: 'pending',
+      fulfilled: 'fulfilled',
+      rejected: 'rejected',
+    };
+  }
+}

@@ -1,4 +1,4 @@
-// import Promis from '../src/promis';
+import Promis from '../src/promis';
 
 // describe('Test custom promise implementation', () => {
 //   it('Should ', () => {
@@ -12,7 +12,12 @@ const test = new Promis((resolve) => {
 });
 console.log(test);
 
-test.then();
+test
+  .then((data) => {
+    console.log('UNBELIEVABLE>>>>>', data);
+    return 'amazing';
+  })
+  .then(data => console.log('UNBELIEVABLE>>>>>', data) || data);
 
 setTimeout(() => {
   console.log(test);

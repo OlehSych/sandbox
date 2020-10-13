@@ -1,45 +1,53 @@
 export default class Promis {
   constructor(fn) {
     Object.defineProperties(this, {
-      resolveFns: {
-        enumerable: false,
-        value: [],
+      resolveCallbacks: { value: [] },
+      rejectCallbacks: { value: [] },
+      finallyCallbacks: { value: [] },
+      resolve: {
+        value: (data) => {
+          this.state = Promis.states.fulfilled;
+          this.result = data;
+          while (this.resolveCallbacks.length) {
+            this.result = this.resolveCallbacks.shift()(this.result);
+          }
+        },
       },
-      rejectFns: {
+      reject: {
         enumerable: false,
-        value: [],
-      },
-      finallyFns: {
-        enumerable: false,
-        value: [],
+        value: (err) => {
+          this.state = Promis.states.rejected;
+          this.result = err;
+          while (this.rejectCallbacks.length) {
+            this.result = this.rejectCallbacks.shift()(this.result);
+          }
+          throw new Error(err);
+        },
       },
     });
     this.state = Promis.states.pending;
     this.result = undefined;
 
     try {
-      fn((data) => {
-        this.state = Promis.states.fulfilled;
-        this.result = data;
-      });
+      fn(this.resolve.bind(this), this.reject.bind(this));
     } catch (err) {
-      this.state = Promis.states.rejected;
-      this.result = err;
-      throw new Error(err);
     } finally {
     }
   }
 
   then(fn) {
-    this.resolveFns.push(fn);
+    this.resolveCallbacks.push(fn);
+    return this;
   }
 
   catch(fn) {
-    this.rejectFns.push(fn);
+    this.rejectCallbacks.push(fn);
+    return this;
   }
 
   finally(fn) {
-    this.finallyFns.push(fn);
+    this.finallyCallbacks.push(fn);
+    return this;
   }
 
   static all(promisArr) {

@@ -1,8 +1,8 @@
 const fs = require('fs');
 
-// There are two microtasks: promise callbacks and process.nextTick callbacks
-// Promise callbacks will be executed at first
-// Then process.nextTick
+// There are two microtasks: process.nextTick callbacks and promise callbacks
+// Process.nextTick will be executed at first
+// Then promise callbacks
 //
 // Macrotasks:
 //
@@ -14,54 +14,29 @@ const fs = require('fs');
 // setImmediate callbacks
 // Close callbacks - executes close callbacks: process.on('exit'), socket.on('close)
 
-function main() {
-  setTimeout(() => console.log('1'), 0);
-  setImmediate(() => console.log('2'));
-  process.nextTick(() => {
-    console.log('process.nextTick 1');
-  });
-  const p1 = new Promise((r) => {
-    console.log('Promise 1');
-    r();
-  });
-  p1.then(() => console.log('Promise 1 then'));
+setTimeout(() => console.log('setTimeout 1'));
 
-  fs.readFile('./isObject.js', () => {
-    setTimeout(() => {
-      console.log('3');
-    }, 1000);
+setImmediate(() => console.log('setImmediate 1'));
 
-    process.nextTick(() => {
-      console.log('process.nextTick 2');
-    });
+process.nextTick(() => console.log('process.nextTick 1'));
 
-    setImmediate(() => console.log('4'));
+Promise.resolve().then(() => console.log('Promise 1'));
 
-    const p4 = new Promise((r) => {
-      console.log('Promise 4');
-      r();
-    });
-    p4.then(() => console.log('Promise 4 then'));
-  });
+fs.readFile(__filename, () => {
+  setTimeout(() => console.log('setTimeout 2'), 1000);
 
-  setImmediate(() => console.log('5'));
+  process.nextTick(() => console.log('process.nextTick 2'));
 
-  setTimeout(() => {
-    process.on('exit', () => {
-      console.log('close callback');
-      const p3 = new Promise((r) => {
-        console.log('Promise 3');
-        r();
-      });
-      p3.then(() => console.log('Promise 3 then'));
-    });
-  }, 1100);
+  setImmediate(() => console.log('setImmediate 2'));
 
-  const p2 = new Promise((r) => {
-    console.log('Promise 2');
-    r();
-  });
-  p2.then(() => console.log('Promise 2 then'));
-}
+  Promise.resolve().then(() => console.log('Promise 2'));
+});
 
-main();
+setImmediate(() => console.log('setImmediate 3'));
+
+setTimeout(() => process.on('exit', () => {
+  console.log('close callback');
+  Promise.resolve().then(() => console.log('Promise 3'));
+}), 1100);
+
+Promise.resolve().then(() => console.log('Promise 4'));

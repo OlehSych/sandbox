@@ -63,6 +63,10 @@ export default class LinkedList {
     return undefined;
   }
 
+  includes(val) {
+    return !!this.find(v => v === val);
+  }
+
   add(val, i = this.length) {
     validateIndex(i, this.length);
 
@@ -85,5 +89,27 @@ export default class LinkedList {
 
     this.length += 1;
     return this;
+  }
+
+  delete(val) {
+    if (this.head) {
+      if (this.head.value === val) {
+        this.head = this.head.next;
+      } else {
+        for (let node = this.head; node !== null; node = node.next) {
+          if (node.next && node.next.value === val) {
+            node.next = node.next.next;
+            this.length -= 1;
+            break;
+          }
+        }
+      }
+    }
+    return this;
+  }
+
+  deleteIndex(i) {
+    validateIndex(i, this.length);
+    // TODO implement delete node by index
   }
 }

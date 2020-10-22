@@ -71,13 +71,17 @@ export default class LinkedList {
     if (i === 0) {
       newNode.next = this.head;
       this.head = newNode;
-    }
-
-    if (i === this.length) {
+    } else if (i === this.length) {
       this.head.getTail().next = newNode;
+    } else {
+      for (let j = 1, currNode = this.head; j <= i; j++, currNode = currNode.next) {
+        if (j === i) {
+          newNode.next = currNode.next;
+          currNode.next = newNode;
+          break;
+        }
+      }
     }
-
-    // TODO add item in the middle of list
 
     this.length += 1;
     return this;

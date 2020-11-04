@@ -25,11 +25,36 @@ function validateIndex(i, length) {
   }
 }
 
+class LinkedListIterator {
+  constructor(list) {
+    this.currentItem = list.head;
+  }
+
+  next() {
+    if (!this.currentItem) {
+      return { done: true };
+    }
+    const res = { value: this.currentItem.value, done: false };
+    this.currentItem = this.currentItem.next;
+    return res;
+  }
+}
+
 export default class LinkedList {
   constructor() {
     Object.defineProperty(this, 'head', { writable: true });
     this.head = null;
     this.length = 0;
+  }
+
+  [Symbol.iterator]() {
+    return new LinkedListIterator(this);
+  }
+
+  get(idx) {
+    // TODO: implement get by index
+    validateIndex(idx, this.length - 1);
+    return this.stations[idx];
   }
 
   forEach(fn) {
@@ -91,13 +116,36 @@ export default class LinkedList {
     return this;
   }
 
-  delete(val) {
+  delete(val, all = false) {
     if (this.head) {
       if (this.head.value === val) {
         this.head = this.head.next;
+        this.length -= 1;
       } else {
         for (let node = this.head; node !== null; node = node.next) {
           if (node.next && node.next.value === val) {
+            node.next = node.next.next;
+            this.length -= 1;
+            if (!all) {
+              break;
+            }
+          }
+        }
+      }
+    }
+    return this;
+  }
+
+  deleteIndex(i) {
+    validateIndex(i, this.length - 1);
+
+    if (this.head) {
+      if (i === 0) {
+        this.head = this.head.next;
+        this.length -= 1;
+      } else {
+        for (let node = this.head, j = 1; node !== null; node = node.next, j++) {
+          if (i === j) {
             node.next = node.next.next;
             this.length -= 1;
             break;
@@ -108,8 +156,9 @@ export default class LinkedList {
     return this;
   }
 
-  deleteIndex(i) {
-    validateIndex(i, this.length);
-    // TODO implement delete node by index
+  deleteNode(ctx, node) {
+    // TODO: optimize delete node
+    node = node.next;
+    this.length -= 1;
   }
 }

@@ -1,4 +1,5 @@
 import LinkedListNode from './linkedListNode';
+import LinkedListIterator from './linkedListIterator';
 
 /*
 Following are the basic operations supported by a list:
@@ -17,26 +18,11 @@ function validateFunction(fn) {
 
 function validateIndex(i, length) {
   if (i !== Math.floor(i)) {
-    throw new Error('Node index must be integer');
+    throw new TypeError('Node index must be integer');
   }
 
   if (i < 0 || i > length) {
-    throw new Error('Out of range index');
-  }
-}
-
-class LinkedListIterator {
-  constructor(list) {
-    this.currentItem = list.head;
-  }
-
-  next() {
-    if (!this.currentItem) {
-      return { done: true };
-    }
-    const res = { value: this.currentItem.value, done: false };
-    this.currentItem = this.currentItem.next;
-    return res;
+    throw new RangeError('Out of range index');
   }
 }
 
@@ -51,10 +37,20 @@ export default class LinkedList {
     return new LinkedListIterator(this);
   }
 
-  get(idx) {
-    // TODO: implement get by index
-    validateIndex(idx, this.length - 1);
-    return this.stations[idx];
+  get(i) {
+    if (i === 0) {
+      return this.head;
+    }
+
+    if (i > 0 && i < this.length) {
+      for (let node = this.head.next, j = 1; node !== null; node = node.next, j++) {
+        if (i === j) {
+          return node;
+        }
+      }
+    }
+
+    return undefined;
   }
 
   forEach(fn) {
@@ -103,8 +99,9 @@ export default class LinkedList {
     } else if (i === this.length) {
       this.head.getTail().next = newNode;
     } else {
+      // TODO: use iterator instead of for loop
       for (let j = 1, currNode = this.head; j <= i; j++, currNode = currNode.next) {
-        if (j === i) {
+        if (i === j) {
           newNode.next = currNode.next;
           currNode.next = newNode;
           break;
@@ -139,26 +136,17 @@ export default class LinkedList {
   deleteIndex(i) {
     validateIndex(i, this.length - 1);
 
-    if (this.head) {
-      if (i === 0) {
-        this.head = this.head.next;
-        this.length -= 1;
-      } else {
-        for (let node = this.head, j = 1; node !== null; node = node.next, j++) {
-          if (i === j) {
-            node.next = node.next.next;
-            this.length -= 1;
-            break;
-          }
+    if (i === 0) {
+      this.head = this.head.next;
+    } else {
+      for (let node = this.head, j = 1; node !== null; node = node.next, j++) {
+        if (i === j) {
+          node.next = node.next.next;
+          break;
         }
       }
     }
-    return this;
-  }
-
-  deleteNode(ctx, node) {
-    // TODO: optimize delete node
-    node = node.next;
     this.length -= 1;
+    return this;
   }
 }

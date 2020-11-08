@@ -76,7 +76,12 @@ export default class LinkedList {
   }
 
   includes(val) {
-    return !!this.find(v => v === val);
+    for (let node = this.head; node !== null; node = node.next) {
+      if (node.value === val) {
+        return true;
+      }
+    }
+    return false;
   }
 
   add(val, i = this.length) {

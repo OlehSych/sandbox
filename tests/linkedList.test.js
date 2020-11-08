@@ -18,6 +18,14 @@ describe('Test linked list implementation', () => {
     expect(testList.length).toEqual(length + 2);
   });
 
+  it('Should return true if value is in the list', () => {
+    testList.add(0).add(null).add(undefined).add('');
+    expect(testList.includes(0)).toBeTruthy();
+    expect(testList.includes(null)).toBeTruthy();
+    expect(testList.includes(undefined)).toBeTruthy();
+    expect(testList.includes('')).toBeTruthy();
+  });
+
   it('Should delete nodes by value', () => {
     const expectedLength = 2;
     expect(testList.delete(3).length).toEqual(expectedLength);

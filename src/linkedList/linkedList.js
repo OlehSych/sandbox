@@ -1,15 +1,6 @@
 import LinkedListNode from './linkedListNode';
 import LinkedListIterator from './linkedListIterator';
 
-/*
-Following are the basic operations supported by a list:
-Insertion − Adds an element at the beginning of the list.
-Deletion − Deletes an element at the beginning of the list.
-Display − Displays the complete list.
-Search − Searches an element using the given key.
-Delete − Deletes an element using the given key.
- */
-
 function validateFunction(fn) {
   if (typeof fn !== 'function') {
     throw new TypeError('Given parameter is not a function');

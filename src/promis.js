@@ -67,8 +67,7 @@ export default class Promis {
   }
 
   static resolve(data) {
-    this.state = Promis.states.fulfilled;
-    this.result = data;
+    return new Promis(r => r(data));
   }
 
   static reject(err) {

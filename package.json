@@ -2,6 +2,7 @@
   "name": "sandbox",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "jest"
@@ -9,8 +10,8 @@
   "author": "Sych O.M.",
   "license": "ISC",
   "dependencies": {
-    "socket.io": "^3.0.1",
-    "socket.io-client": "^3.0.1"
+    "socket.io": "^4.1.2",
+    "socket.io-client": "^4.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",

@@ -1,0 +1,19 @@
+#
+# https://gitlab.com/gitlab-org/gitlab/tree/master/lib/gitlab/ci/templates/Nodejs.gitlab-ci.yml
+#
+image: node:12
+
+# Cache modules in between jobs
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .npm/
+
+before_script:
+  - npm ci --cache .npm --prefer-offline
+
+test:
+  except:
+    - /^feature\/.*$/
+  script:
+    - npm run test

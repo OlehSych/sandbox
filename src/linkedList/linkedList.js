@@ -8,7 +8,7 @@ function validateFunction(fn) {
 }
 
 function validateIndex(i, length) {
-  if (i !== Math.floor(i)) {
+  if (!Number.isInteger(i)) {
     throw new TypeError('Node index must be integer');
   }
 
@@ -29,39 +29,31 @@ export default class LinkedList {
   }
 
   get(i) {
-    if (i === 0) {
-      return this.head.value;
+    if (!Number.isInteger(i) || i < 0 || i >= this.length) {
+      return undefined;
     }
 
-    if (i > 0 && i < this.length) {
-      for (let node = this.head.next, j = 1; node !== null; node = node.next, j++) {
-        if (i === j) {
-          return node.value;
-        }
+    let node = this.head;
+    let j = 0;
+
+    while (i !== j) {
+      node = node.next;
+      j += 1;
+    }
+
+    return node.value;
+  }
+
+  filter(fn) {
+    validateFunction(fn);
+
+    for (let node = this.head; node !== null; node = node.next) {
+      if (!fn(node.value)) {
+        this.delete(node.value);
       }
     }
 
-    return undefined;
-  }
-
-  forEach(fn) {
-    validateFunction(fn);
-
-    for (let node = this.head; node !== null; node = node.next) {
-      fn(node.value);
-    }
-  }
-
-  map(fn) {
-    validateFunction(fn);
-
-    const results = [];
-
-    for (let node = this.head; node !== null; node = node.next) {
-      results.push(fn(node.value));
-    }
-
-    return results;
+    return this;
   }
 
   find(fn) {
@@ -74,6 +66,16 @@ export default class LinkedList {
     }
 
     return undefined;
+  }
+
+  indexOf(val) {
+    for (let node = this.head, index = 0; node !== null; node = node.next, index += 1) {
+      if (node.value === val) {
+        return index;
+      }
+    }
+
+    return -1;
   }
 
   includes(val) {
@@ -109,19 +111,18 @@ export default class LinkedList {
     return this;
   }
 
-  delete(val, findAll = false) {
-    while (this.head && this.head.value === val) {
+  delete(val) {
+    if (this.head && this.head.value === val) {
       this.head = this.head.next;
       this.length -= 1;
+      return this;
     }
 
     for (let node = this.head; node !== null; node = node.next) {
       if (node.next && node.next.value === val) {
         node.next = node.next.next;
         this.length -= 1;
-        if (!findAll) {
-          break;
-        }
+        break;
       }
     }
 

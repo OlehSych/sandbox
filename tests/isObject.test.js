@@ -54,6 +54,6 @@ describe('Test isObject function', () => {
       Symbol('test'),
     ];
 
-    testValues.forEach(test => expect(isObject(test)).toBe(false));
+    testValues.forEach((test) => expect(isObject(test)).toBe(false));
   });
 });

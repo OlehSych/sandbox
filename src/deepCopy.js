@@ -7,7 +7,7 @@ export default function deepCopy(obj) {
     if (isObject(obj[key])) {
       newVal = deepCopy(obj[key]);
     } else if (Array.isArray(obj[key])) {
-      newVal = obj[key].map(item => (typeof item === 'object' ? deepCopy(item) : item));
+      newVal = obj[key].map((item) => (typeof item === 'object' ? deepCopy(item) : item));
     } else {
       newVal = obj[key];
     }

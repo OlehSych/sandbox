@@ -7,6 +7,13 @@ describe('Test linked list implementation', () => {
     testList = new LinkedList().add(2).add(3).add(4);
   });
 
+  it('Should get node by index', () => {
+    const invalidIndex = 'test';
+    expect(testList[1]).toEqual(3);
+    expect(testList[invalidIndex]).toBeUndefined();
+    expect(testList.get(invalidIndex)).toBeUndefined();
+  });
+
   it('Should add new node in the middle of list', () => {
     const index = 2;
     const value = 5;
@@ -16,6 +23,11 @@ describe('Test linked list implementation', () => {
     testList[index] = value;
     expect(testList[index]).toEqual(value);
     expect(testList.length).toEqual(length + 2);
+
+    expect(() => testList.add(value, 0.52))
+      .toThrow(new TypeError('Node index must be integer'));
+    expect(() => testList.add(value, testList.length + 1))
+      .toThrow(new RangeError('Out of range index'));
   });
 
   it('Should return true if value is in the list', () => {
@@ -31,8 +43,16 @@ describe('Test linked list implementation', () => {
     expect(testList.delete(3).length).toEqual(expectedLength);
     expect(testList.includes(3)).toBeFalsy();
     expect(testList.delete(2).delete(4).head).toBeNull();
-    testList.add(1).add(1).add(2).add(3);
-    expect(testList.delete(1, true).length).toEqual(expectedLength);
+  });
+
+  it('Should filter nodes by fn', () => {
+    testList.add(5).add(6).filter((value) => value >= 5);
+    expect(testList.length).toEqual(2);
+    testList.add(1).add(1).add(3).filter((value) => value !== 1);
+    expect(testList.length).toEqual(3);
+
+    expect(() => testList.filter('invalidData'))
+      .toThrow(new TypeError('Given parameter is not a function'));
   });
 
   it('Should delete node by index', () => {
@@ -51,8 +71,15 @@ describe('Test linked list implementation', () => {
   });
 
   it('Should find node by condition', () => {
-    const isOddNumber = num => num % 2;
+    const isOddNumber = (num) => num % 2;
     expect(testList.find(isOddNumber)).toEqual(3);
+    testList.delete(3);
+    expect(testList.find(isOddNumber)).toBeUndefined();
+  });
+
+  it('Should find index of the node by value', () => {
+    expect(testList.indexOf(4)).toEqual(2);
+    expect(testList.indexOf(228)).toEqual(-1);
   });
 
   it('Should iterate nodes', () => {
@@ -63,5 +90,8 @@ describe('Test linked list implementation', () => {
       i += 1;
     }
     expect(i).toBe(testList.length);
+
+    const arr = Array.from(testList);
+    expect(arr.length).toBe(testList.length);
   });
 });

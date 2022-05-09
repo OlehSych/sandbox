@@ -1,79 +1,93 @@
+import LinkedList from './linkedList/linkedList';
+
 export default class Promis {
   constructor(fn) {
     Object.defineProperties(this, {
-      resolveCallbacks: { value: [] },
-      rejectCallbacks: { value: [] },
-      finallyCallbacks: { value: [] },
+      resolveCallbacks: { value: new LinkedList() },
+      rejectCallbacks: { value: new LinkedList() },
+      finallyCallbacks: { value: new LinkedList() },
       resolve: {
         value: (data) => {
           this.state = Promis.states.fulfilled;
           this.result = data;
-          while (this.resolveCallbacks.length) {
-            this.result = this.resolveCallbacks.shift()(this.result);
-          }
+          process.nextTick(() => {
+            while (this.resolveCallbacks.length) {
+              try {
+                this.result = this.resolveCallbacks.shift()(this.result);
+              } catch (err) {
+                if (!this.rejectCallbacks.length) {
+                  this.result = err;
+                  throw err;
+                }
+                this.result = this.rejectCallbacks.shift()(err);
+              } finally {
+                if (this.finallyCallbacks.length) {
+                  this.result = this.finallyCallbacks.shift()(this.result);
+                }
+              }
+            }
+            if (this.state === Promis.states.pending) {
+              this.state = Promis.states.fulfilled;
+            }
+          });
         },
       },
       reject: {
-        enumerable: false,
-        value: (err) => {
+        value: (data) => {
           this.state = Promis.states.rejected;
-          this.result = err;
-          while (this.rejectCallbacks.length) {
+          this.result = data;
+          process.nextTick(() => {
+            if (!this.rejectCallbacks.length) {
+              throw this.result;
+            }
             this.result = this.rejectCallbacks.shift()(this.result);
-          }
-          throw new Error(err);
+          });
         },
       },
     });
     this.state = Promis.states.pending;
     this.result = undefined;
 
-    try {
-      fn(this.resolve.bind(this), this.reject.bind(this));
-    } catch (err) {
-    } finally {
-    }
+    fn(this.resolve.bind(this), this.reject.bind(this));
   }
 
   then(fn) {
-    this.resolveCallbacks.push(fn);
+    this.resolveCallbacks.add(fn);
     return this;
   }
 
   catch(fn) {
-    this.rejectCallbacks.push(fn);
+    this.rejectCallbacks.add(fn);
     return this;
   }
 
   finally(fn) {
-    this.finallyCallbacks.push(fn);
+    this.finallyCallbacks.add(fn);
     return this;
   }
 
-  static all(promisArr) {
-
-  }
-
-  static allSettled(promisArr) {
-
-  }
-
-  static any(promisArr) {
-
-  }
-
-  static race(promisArr) {
-
-  }
+  // static all(promisArr) {
+  //
+  // }
+  //
+  // static allSettled(promisArr) {
+  //
+  // }
+  //
+  // static any(promisArr) {
+  //
+  // }
+  //
+  // static race(promisArr) {
+  //
+  // }
 
   static resolve(data) {
-    return new Promis(r => r(data));
+    return new Promis((resolve) => resolve(data));
   }
 
-  static reject(err) {
-    this.state = Promis.states.rejected;
-    this.result = err;
-    throw new Error(err);
+  static reject(data) {
+    return new Promis((_, reject) => reject(data));
   }
 
   static get states() {

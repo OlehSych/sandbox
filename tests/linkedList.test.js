@@ -31,6 +31,8 @@ describe('Test linked list implementation', () => {
     expect(testList.delete(3).length).toEqual(expectedLength);
     expect(testList.includes(3)).toBeFalsy();
     expect(testList.delete(2).delete(4).head).toBeNull();
+    testList.add(1).add(1).add(2).add(3);
+    expect(testList.delete(1, true).length).toEqual(expectedLength);
   });
 
   it('Should delete node by index', () => {
@@ -38,6 +40,14 @@ describe('Test linked list implementation', () => {
     expect(testList.deleteIndex(0).length).toEqual(expectedLength);
     expect(testList.includes(2)).toBeFalsy();
     expect(testList.deleteIndex(1).deleteIndex(0).head).toBeNull();
+  });
+
+  it('Should delete first item and return it', () => {
+    const expectedValue = 2;
+    const expectedLength = testList.length - 1;
+    expect(testList.shift()).toEqual(expectedValue);
+    expect(testList.length).toEqual(expectedLength);
+    expect(new LinkedList().shift()).toBeUndefined();
   });
 
   it('Should find node by condition', () => {

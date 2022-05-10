@@ -1,4 +1,5 @@
 import LinkedList from '../src/linkedList';
+import LinkedListNode from '../src/linkedList/linkedListNode';
 
 describe('Test linked list implementation', () => {
   let testList;
@@ -18,8 +19,10 @@ describe('Test linked list implementation', () => {
     const index = 2;
     const value = 5;
     const { length } = testList;
+
     testList.add(value, index);
     expect(testList.get(index)).toEqual(value);
+
     testList[index] = value;
     expect(testList[index]).toEqual(value);
     expect(testList.length).toEqual(length + 2);
@@ -28,6 +31,22 @@ describe('Test linked list implementation', () => {
       .toThrow(new TypeError('Node index must be integer'));
     expect(() => testList.add(value, testList.length + 1))
       .toThrow(new RangeError('Out of range index'));
+  });
+
+  it('Should add new node instance to the list', () => {
+    class TestNode extends LinkedListNode {
+      constructor({ name, value }) {
+        super(value);
+        this.name = name;
+      }
+    }
+    const index = 1;
+    const value = 44;
+    const name = 'test';
+    testList.add(new TestNode({ name, value }));
+    testList[index] = new TestNode({ name, value });
+    expect(testList[index]).toEqual(value);
+    expect(testList[testList.length - 1]).toEqual(value);
   });
 
   it('Should return true if value is in the list', () => {

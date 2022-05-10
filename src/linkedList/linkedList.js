@@ -35,7 +35,6 @@ export default class LinkedList {
 
     let node = this.head;
     let j = 0;
-
     while (i !== j) {
       node = node.next;
       j += 1;
@@ -69,7 +68,7 @@ export default class LinkedList {
   }
 
   indexOf(val) {
-    for (let node = this.head, index = 0; node !== null; node = node.next, index += 1) {
+    for (let node = this.head, index = 0; node !== null; node = node.next, index++) {
       if (node.value === val) {
         return index;
       }
@@ -90,7 +89,7 @@ export default class LinkedList {
   add(val, i = this.length) {
     validateIndex(i, this.length);
 
-    const newNode = new LinkedListNode(val);
+    const newNode = val instanceof LinkedListNode ? val : new LinkedListNode(val);
 
     if (i === 0) {
       newNode.next = this.head;

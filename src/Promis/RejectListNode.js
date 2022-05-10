@@ -1,3 +1,3 @@
-import LinkedListNode from '../linkedList/linkedListNode';
+import LinkedListNode from '../linkedList/LinkedListNode';
 
 export default class RejectListNode extends LinkedListNode {}

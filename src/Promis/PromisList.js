@@ -1,4 +1,4 @@
-import LinkedList from '../linkedList/linkedList';
+import LinkedList from '../linkedList/LinkedList';
 
 export default class PromisList extends LinkedList {
   deleteTill(fn) {

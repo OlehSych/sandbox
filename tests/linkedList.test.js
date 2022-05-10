@@ -1,5 +1,5 @@
-import LinkedList from '../src/linkedList';
-import LinkedListNode from '../src/linkedList/linkedListNode';
+import LinkedList from '../src/LinkedList';
+import LinkedListNode from '../src/linkedList/LinkedListNode';
 
 describe('Test linked list implementation', () => {
   let testList;

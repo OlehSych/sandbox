@@ -1,4 +1,4 @@
-import LinkedList from './linkedList';
+import LinkedList from './LinkedList';
 
 export default function LinkedListIndexers() {
   return new Proxy(new LinkedList(), {

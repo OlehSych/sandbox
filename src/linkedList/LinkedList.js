@@ -1,5 +1,5 @@
-import LinkedListNode from './linkedListNode';
-import LinkedListIterator from './linkedListIterator';
+import LinkedListNode from './LinkedListNode';
+import LinkedListIterator from './LinkedListIterator';
 
 function validateFunction(fn) {
   if (typeof fn !== 'function') {

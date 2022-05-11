@@ -1,17 +1,19 @@
-import PromisList from './PromisList';
-import ResolveListNode from './ResolveListNode';
-import RejectListNode from './RejectListNode';
-import FinallyListNode from './FinallyListNode';
+import CallbackList from './CallbackList';
+import {
+  ResolveCallback,
+  RejectCallback,
+  FinallyCallback,
+} from './callbacks';
 
 export default class Promis {
   constructor(fn) {
     Object.defineProperties(this, {
-      callbacks: { value: new PromisList() },
+      callbacks: { value: new CallbackList() },
       resolve: {
         value: (data) => {
           this.result = data;
           const callback = this.callbacks
-            .deleteTill((node) => node instanceof RejectListNode)
+            .deleteTill((cb) => cb instanceof RejectCallback)
             .shift();
 
           if (!callback) {
@@ -19,14 +21,14 @@ export default class Promis {
             return;
           }
 
-          if (callback instanceof ResolveListNode) {
+          if (callback instanceof ResolveCallback) {
             try {
-              this.resolve(callback(this.result));
+              this.resolve(callback.execute(this.result));
             } catch (err) {
               this.reject(err);
             }
           } else {
-            callback();
+            callback.execute();
             this.resolve(this.result);
           }
         },
@@ -35,7 +37,7 @@ export default class Promis {
         value: (data) => {
           this.result = data;
           const callback = this.callbacks
-            .deleteTill((node) => node instanceof ResolveListNode)
+            .deleteTill((node) => node instanceof ResolveCallback)
             .shift();
 
           if (!callback) {
@@ -43,14 +45,14 @@ export default class Promis {
             throw this.result;
           }
 
-          if (callback instanceof RejectListNode) {
+          if (callback instanceof RejectCallback) {
             try {
-              this.resolve(callback(this.result));
+              this.resolve(callback.execute(this.result));
             } catch (err) {
               this.reject(err);
             }
           } else {
-            callback();
+            callback.execute();
             this.reject(this.result);
           }
         },
@@ -63,17 +65,17 @@ export default class Promis {
   }
 
   then(fn) {
-    this.callbacks.add(new ResolveListNode(fn));
+    this.callbacks.add(new ResolveCallback(fn));
     return this;
   }
 
   catch(fn) {
-    this.callbacks.add(new RejectListNode(fn));
+    this.callbacks.add(new RejectCallback(fn));
     return this;
   }
 
   finally(fn) {
-    this.callbacks.add(new FinallyListNode(fn));
+    this.callbacks.add(new FinallyCallback(fn));
     return this;
   }
 
@@ -94,11 +96,11 @@ export default class Promis {
   // }
 
   static resolve(data) {
-    return new Promis((resolve) => process.nextTick(resolve(data)));
+    return new Promis((resolve) => resolve(data));
   }
 
   static reject(data) {
-    return new Promis((_, reject) => process.nextTick(reject(data)));
+    return new Promis((_, reject) => reject(data));
   }
 
   static get states() {

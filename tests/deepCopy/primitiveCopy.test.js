@@ -13,6 +13,6 @@ describe('Validate deepCopy primitives copying', () => {
 
   it('Should create new object', () => {
     const anotherAnimal = deepCopy(animal);
-    Object.keys(animal).forEach(prop => expect(anotherAnimal[prop]).toBe(animal[prop]));
+    Object.keys(animal).forEach((prop) => expect(anotherAnimal[prop]).toBe(animal[prop]));
   });
 });

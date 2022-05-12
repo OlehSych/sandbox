@@ -7,11 +7,9 @@ export default class LinkedListIterator {
     if (!this.currentItem) {
       return { done: true };
     }
-    const res = {
-      value: this.currentItem.value,
-      done: false,
-    };
+    const { value } = this.currentItem;
     this.currentItem = this.currentItem.next;
-    return res;
+
+    return { value, done: false };
   }
 }

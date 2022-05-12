@@ -1,34 +1,20 @@
 {
-  "env": {
-    "browser": true,
-    "es6": true,
-    "jest/globals": true
-  },
-  "extends": "airbnb",
-  "plugins": [
-    "jest"
-  ],
-  "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
-  },
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
-    "ecmaVersion": 2018,
-    "sourceType": "module"
+    "requireConfigFile": false
+  },
+  "extends": "airbnb-base",
+  "plugins": ["jest"],
+  "env": {
+    "jest": true
   },
   "rules": {
-    "arrow-parens": [
-      2,
-      "as-needed",
-      {
-        "requireForBlockBody": true
-      }
-    ],
     "no-plusplus": [
       "error",
       {
         "allowForLoopAfterthoughts": true
       }
-    ]
+    ],
+    "no-console": "off"
   }
 }

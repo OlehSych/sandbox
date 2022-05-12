@@ -23,4 +23,4 @@ socket
   .on('exception', (err) => {
     console.log('Exception:', err);
   })
-  .on('message', data => console.log('message received: ', data));
+  .on('message', (data) => console.log('message received: ', data));

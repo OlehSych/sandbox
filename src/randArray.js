@@ -14,7 +14,7 @@ export default function randArray(length, min = 0, max = 1, scale = 0) {
   const checks = [
     {
       get err() {
-        return Object.keys(args).find(key => !isSafeNumber(args[key]));
+        return Object.keys(args).find((key) => !isSafeNumber(args[key]));
       },
     },
     {

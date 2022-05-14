@@ -1,4 +1,4 @@
-import LinkedList from '../linkedList/LinkedList';
+import LinkedList from '../../linkedList/LinkedList';
 
 export default class CallbackList extends LinkedList {
   deleteTill(fn) {

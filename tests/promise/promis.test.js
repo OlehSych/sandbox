@@ -1,10 +1,10 @@
-import Promis from '../src/Promis';
-import CallbackList from '../src/Promis/CallbackList';
+import Promis from '../../src/promise/Promis';
+import CallbackList from '../../src/promise/Promis/CallbackList';
 import {
   ResolveCallback,
   RejectCallback,
   FinallyCallback,
-} from '../src/Promis/callbacks';
+} from '../../src/promise/Promis/callbacks';
 
 describe('Test CallbackList with custom callbacks', () => {
   it('Should test deleteTill fn of CallbackList', () => {

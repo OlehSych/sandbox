@@ -1,7 +1,6 @@
 /* eslint-disable max-classes-per-file */
-class BaseCallback extends Function {
+class BaseCallback {
   constructor(cb) {
-    super();
     this.cb = cb;
   }
 
